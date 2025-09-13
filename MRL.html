@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart MRL Monitoring & AMU Management</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .compliant { color: #27ae60; }
+        .warning { color: #f39c12; }
+        .critical { color: #e74c3c; }
+        .info { color: #3498db; }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-section, .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-container {
+            height: 400px;
+            margin-bottom: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #666;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            font-weight: 600;
+        }
+
+        .tab:hover {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-warning {
+            background: rgba(243, 156, 18, 0.1);
+            border-left: 4px solid #f39c12;
+            color: #d68910;
+        }
+
+        .alert-critical {
+            background: rgba(231, 76, 60, 0.1);
+            border-left: 4px solid #e74c3c;
+            color: #c0392b;
+        }
+
+        .alert-success {
+            background: rgba(39, 174, 96, 0.1);
+            border-left: 4px solid #27ae60;
+            color: #229954;
+        }
+
+        .monitoring-table {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .monitoring-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .monitoring-table th,
+        .monitoring-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .monitoring-table th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .monitoring-table tbody tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-compliant {
+            background: rgba(39, 174, 96, 0.2);
+            color: #27ae60;
+        }
+
+        .status-warning {
+            background: rgba(243, 156, 18, 0.2);
+            color: #f39c12;
+        }
+
+        .status-exceeded {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Smart MRL Monitoring & AMU Management</h1>
+            <p>Real-time monitoring of Maximum Residue Limits and intelligent Antimicrobial Use management</p>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number compliant">847</div>
+                <div class="stat-label">Compliant Samples</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number warning">23</div>
+                <div class="stat-label">Warning Level</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number critical">5</div>
+                <div class="stat-label">MRL Exceeded</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number info">1,205</div>
+                <div class="stat-label">Total Tests</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="chart-section">
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('residue')">Residue Levels</button>
+                    <button class="tab" onclick="switchTab('trends')">Trends</button>
+                    <button class="tab" onclick="switchTab('amu')">AMU Usage</button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="mainChart"></canvas>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <h3 style="margin-bottom: 20px; color: #333;">Recent Alerts</h3>
+                <div class="alert alert-critical">
+                    <span>⚠</span>
+                    <div>
+                        <strong>Critical MRL Exceeded</strong><br>
+                        Oxytetracycline in Batch #OT-2024-089
+                    </div>
+                </div>
+                <div class="alert alert-warning">
+                    <span>⚡</span>
+                    <div>
+                        <strong>Approaching Limit</strong><br>
+                        Sulfamethoxazole at 85% MRL
+                    </div>
+                </div>
+                <div class="alert alert-success">
+                    <span>✅</span>
+                    <div>
+                        <strong>AMU Reduction</strong><br>
+                        15% decrease this quarter
+                    </div>
+                </div>
+
+                <h3 style="margin: 30px 0 20px 0; color: #333;">Smart Recommendations</h3>
+                <div style="background: rgba(102, 126, 234, 0.05); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <strong>Withdrawal Period Optimization</strong><br>
+                    <small>Extend withdrawal period for oxytetracycline by 2 days based on recent residue patterns</small>
+                </div>
+                <div style="background: rgba(39, 174, 96, 0.05); padding: 15px; border-radius: 8px;">
+                    <strong>Alternative Treatment</strong><br>
+                    <small>Consider switching to florfenicol for respiratory infections to reduce tetracycline load</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="monitoring-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sample ID</th>
+                        <th>Antimicrobial</th>
+                        <th>Detected Level (µg/kg)</th>
+                        <th>MRL (µg/kg)</th>
+                        <th>% of MRL</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>SM-2024-1201</td>
+                        <td>Oxytetracycline</td>
+                        <td>125</td>
+                        <td>100</td>
+                        <td>125%</td>
+                        <td><span class="status-badge status-exceeded">Exceeded</span></td>
+                        <td>2024-09-06</td>
+                    </tr>
+                    <tr>
+                        <td>SM-2024-1200</td>
+                        <td>Sulfamethoxazole</td>
+                        <td>85</td>
+                        <td>100</td>
+                        <td>85%</td>
+                        <td><span class="status-badge status-warning">Warning</span></td>
+                        <td>2024-09-06</td>
+                    </tr>
+                    <tr>
+                        <td>SM-2024-1199</td>
+                        <td>Enrofloxacin</td>
+                        <td>45</td>
+                        <td>100</td>
+                        <td>45%</td>
+                        <td><span class="status-badge status-compliant">Compliant</span></td>
+                        <td>2024-09-05</td>
+                    </tr>
+                    <tr>
+                        <td>SM-2024-1198</td>
+                        <td>Chlortetracycline</td>
+                        <td>32</td>
+                        <td>200</td>
+                        <td>16%</td>
+                        <td><span class="status-badge status-compliant">Compliant</span></td>
+                        <td>2024-09-05</td>
+                    </tr>
+                    <tr>
+                        <td>SM-2024-1197</td>
+                        <td>Tylosin</td>
+                        <td>78</td>
+                        <td>100</td>
+                        <td>78%</td>
+                        <td><span class="status-badge status-warning">Warning</span></td>
+                        <td>2024-09-04</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="generateReport()">Generate Report</button>
+            <button class="btn btn-secondary" onclick="exportData()">Export Data</button>
+            <button class="btn btn-secondary" onclick="scheduleAnalysis()">Schedule Analysis</button>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; 2024 Smart MRL Monitoring System | Ensuring food safety through intelligent antimicrobial management</p>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize charts
+        let currentChart = null;
+
+        const residueData = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+            datasets: [{
+                label: 'Oxytetracycline',
+                data: [45, 52, 48, 61, 59, 67, 73, 89, 95],
+                borderColor: '#e74c3c',
+                backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                tension: 0.4
+            }, {
+                label: 'Sulfamethoxazole',
+                data: [32, 35, 42, 38, 45, 48, 52, 58, 62],
+                borderColor: '#f39c12',
+                backgroundColor: 'rgba(243, 156, 18, 0.1)',
+                tension: 0.4
+            }, {
+                label: 'Enrofloxacin',
+                data: [28, 31, 29, 34, 32, 35, 38, 41, 39],
+                borderColor: '#27ae60',
+                backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                tension: 0.4
+            }]
+        };
+
+        const trendsData = {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+            datasets: [{
+                label: 'Compliance Rate %',
+                data: [94, 92, 89, 91],
+                borderColor: '#667eea',
+                backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                type: 'line',
+                tension: 0.4
+            }, {
+                label: 'Tests Conducted',
+                data: [245, 267, 289, 312],
+                backgroundColor: 'rgba(116, 75, 162, 0.8)',
+                type: 'bar'
+            }]
+        };
+
+        const amuData = {
+            labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+            datasets: [{
+                label: 'AMU Index',
+                data: [78, 72, 65, 58],
+                borderColor: '#3498db',
+                backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                fill: true,
+                tension: 0.4
+            }]
+        };
+
+        function initChart() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            currentChart = new Chart(ctx, {
+                type: 'line',
+                data: residueData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Antimicrobial Residue Levels Over Time'
+                        },
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Residue Level (µg/kg)'
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                }
+            });
+        }
+
+        function switchTab(tab) {
+            // Update tab appearance
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            // Use event parameter safely
+            if (window.event && window.event.target) {
+                window.event.target.classList.add('active');
+            }
+
+            // Update chart data
+            if (currentChart) {
+                currentChart.destroy();
+            }
+
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            
+            switch(tab) {
+                case 'residue':
+                    currentChart = new Chart(ctx, {
+                        type: 'line',
+                        data: residueData,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Antimicrobial Residue Levels Over Time'
+                                },
+                                legend: { position: 'bottom' }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: { display: true, text: 'Residue Level (µg/kg)' }
+                                }
+                            }
+                        }
+                    });
+                    break;
+                case 'trends':
+                    currentChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: trendsData,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Compliance Trends & Testing Volume'
+                                },
+                                legend: { position: 'bottom' }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: { display: true, text: 'Value' }
+                                }
+                            }
+                        }
+                    });
+                    break;
+                case 'amu':
+                    currentChart = new Chart(ctx, {
+                        type: 'line',
+                        data: amuData,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Antimicrobial Use Index Reduction'
+                                },
+                                legend: { position: 'bottom' }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: { display: true, text: 'AMU Index' }
+                                }
+                            }
+                        }
+                    });
+                    break;
+            }
+        }
+
+        // Modal styles and functionality
+        const modalStyles = `
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(5px);
+            }
+            
+            .modal-content {
+                background: white;
+                margin: 5% auto;
+                padding: 30px;
+                border-radius: 15px;
+                width: 90%;
+                max-width: 600px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                position: relative;
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+            
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+                cursor: pointer;
+                position: absolute;
+                right: 20px;
+                top: 15px;
+            }
+            
+            .close:hover {
+                color: #667eea;
+            }
+            
+            .form-group {
+                margin-bottom: 20px;
+            }
+            
+            .form-group label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: 600;
+                color: #333;
+            }
+            
+            .form-group select,
+            .form-group input,
+            .form-group textarea {
+                width: 100%;
+                padding: 12px;
+                border: 2px solid #e0e0e0;
+                border-radius: 8px;
+                font-size: 1rem;
+                transition: border-color 0.3s ease;
+            }
+            
+            .form-group select:focus,
+            .form-group input:focus,
+            .form-group textarea:focus {
+                outline: none;
+                border-color: #667eea;
+            }
+            
+            .checkbox-group {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 10px;
+                margin-top: 10px;
+            }
+            
+            .checkbox-item {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            
+            .progress-bar {
+                width: 100%;
+                height: 20px;
+                background-color: #e0e0e0;
+                border-radius: 10px;
+                overflow: hidden;
+                margin: 20px 0;
+            }
+            
+            .progress-fill {
+                height: 100%;
+                background: linear-gradient(90deg, #667eea, #764ba2);
+                width: 0%;
+                transition: width 0.3s ease;
+            }
+            
+            .success-message {
+                background: rgba(39, 174, 96, 0.1);
+                border: 2px solid #27ae60;
+                color: #27ae60;
+                padding: 15px;
+                border-radius: 8px;
+                text-align: center;
+                margin-top: 20px;
+            }
+        `;
+
+        // Add modal styles to head
+        document.addEventListener('DOMContentLoaded', function() {
+            const styleSheet = document.createElement("style");
+            styleSheet.textContent = modalStyles;
+            document.head.appendChild(styleSheet);
+        });
+
+        // Sample data for processing
+        const sampleData = [
+            {id: "SM-2024-1201", antimicrobial: "Oxytetracycline", detected: 125, mrl: 100, date: "2024-09-06", status: "Exceeded"},
+            {id: "SM-2024-1200", antimicrobial: "Sulfamethoxazole", detected: 85, mrl: 100, date: "2024-09-06", status: "Warning"},
+            {id: "SM-2024-1199", antimicrobial: "Enrofloxacin", detected: 45, mrl: 100, date: "2024-09-05", status: "Compliant"},
+            {id: "SM-2024-1198", antimicrobial: "Chlortetracycline", detected: 32, mrl: 200, date: "2024-09-05", status: "Compliant"},
+            {id: "SM-2024-1197", antimicrobial: "Tylosin", detected: 78, mrl: 100, date: "2024-09-04", status: "Warning"}
+        ];
+
+        function generateReport() {
+            const modal = createModal('Generate MRL Report', `
+                <form id="reportForm">
+                    <div class="form-group">
+                        <label>Report Type:</label>
+                        <select id="reportType">
+                            <option value="comprehensive">Comprehensive Analysis</option>
+                            <option value="compliance">Compliance Summary</option>
+                            <option value="trend">Trend Analysis</option>
+                            <option value="risk">Risk Assessment</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Date Range:</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <input type="date" id="startDate" value="2024-08-01">
+                            <input type="date" id="endDate" value="2024-09-06">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Include Sections:</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="summary" checked>
+                                <label for="summary">Executive Summary</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="statistics" checked>
+                                <label for="statistics">Statistics</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="charts" checked>
+                                <label for="charts">Charts & Graphs</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="recommendations" checked>
+                                <label for="recommendations">Recommendations</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Format:</label>
+                        <select id="reportFormat">
+                            <option value="pdf">PDF Report</option>
+                            <option value="html">HTML Report</option>
+                            <option value="excel">Excel Workbook</option>
+                        </select>
+                    </div>
+                    
+                    <button type="button" class="btn btn-primary" onclick="processReport()" style="width: 100%;">
+                        Generate Report
+                    </button>
+                    
+                    <div id="reportProgress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <div id="progressText">Generating report...</div>
+                    </div>
+                    
+                    <div id="reportSuccess" style="display: none;" class="success-message">
+                        <strong>✅ Report Generated Successfully!</strong><br>
+                        <a href="#" id="downloadLink">Click here to download your report</a>
+                    </div>
+                </form>
+            `);
+            
+            document.body.appendChild(modal);
+            modal.style.display = 'block';
+        }
+
+        function processReport() {
+            const reportType = document.getElementById('reportType').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const format = document.getElementById('reportFormat').value;
+            
+            const progressDiv = document.getElementById('reportProgress');
+            const progressFill = document.querySelector('.progress-fill');
+            const progressText = document.getElementById('progressText');
+            const successDiv = document.getElementById('reportSuccess');
+            
+            progressDiv.style.display = 'block';
+            
+            // Simulate report generation process
+            let progress = 0;
+            const steps = [
+                'Collecting sample data...',
+                'Analyzing MRL compliance...',
+                'Calculating statistics...',
+                'Generating charts...',
+                'Compiling recommendations...',
+                'Formatting report...',
+                'Finalizing document...'
+            ];
+            
+            const interval = setInterval(() => {
+                progress += Math.random() * 20;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    setTimeout(() => {
+                        progressDiv.style.display = 'none';
+                        successDiv.style.display = 'block';
+                        
+                        // Generate actual report data
+                        const reportData = generateReportData(reportType, startDate, endDate);
+                        const blob = new Blob([reportData], { type: 'text/plain' });
+                        const url = URL.createObjectURL(blob);
+                        
+                        const downloadLink = document.getElementById('downloadLink');
+                        downloadLink.href = url;
+                        downloadLink.download = `MRL_Report_${reportType}_${new Date().toISOString().split('T')[0]}.txt`;
+                    }, 500);
+                    
+                    return;
+                }
+                
+                progressFill.style.width = progress + '%';
+                progressText.textContent = steps[Math.floor(progress / 14.3)] || 'Finalizing...';
+            }, 300);
+        }
+
+        function generateReportData(reportType, startDate, endDate) {
+            const compliantSamples = sampleData.filter(s => s.status === 'Compliant').length;
+            const warningSamples = sampleData.filter(s => s.status === 'Warning').length;
+            const exceededSamples = sampleData.filter(s => s.status === 'Exceeded').length;
+            const complianceRate = (compliantSamples / sampleData.length * 100).toFixed(1);
+            
+            return `
+MRL MONITORING REPORT
+=====================
+
+Report Type: ${reportType.toUpperCase()}
+Generated: ${new Date().toLocaleString()}
+Period: ${startDate} to ${endDate}
+
+EXECUTIVE SUMMARY
+================
+Total Samples Analyzed: ${sampleData.length}
+Compliance Rate: ${complianceRate}%
+Samples Exceeding MRL: ${exceededSamples}
+Warning Level Samples: ${warningSamples}
+
+DETAILED ANALYSIS
+================
+${sampleData.map(sample => 
+    `Sample ID: ${sample.id}
+    Antimicrobial: ${sample.antimicrobial}
+    Detected Level: ${sample.detected} µg/kg
+    MRL: ${sample.mrl} µg/kg
+    Status: ${sample.status}
+    Date: ${sample.date}
+    ---`).join('\n')}
+
+RECOMMENDATIONS
+==============
+1. Increase withdrawal periods for oxytetracycline treatments
+2. Implement enhanced monitoring for sulfamethoxazole residues
+3. Review AMU protocols for high-risk antimicrobials
+4. Consider alternative treatments where residue levels are concerning
+
+RISK ASSESSMENT
+==============
+Current risk level: MODERATE
+Key concerns: Oxytetracycline residue trends
+Recommended actions: Immediate protocol review for exceeded samples
+            `;
+        }
+
+        function exportData() {
+            const modal = createModal('Export Data', `
+                <form id="exportForm">
+                    <div class="form-group">
+                        <label>Data Type:</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="sampleData" checked>
+                                <label for="sampleData">Sample Test Results</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="trendData" checked>
+                                <label for="trendData">Trend Analysis</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="complianceData" checked>
+                                <label for="complianceData">Compliance Statistics</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="amuData" checked>
+                                <label for="amuData">AMU Usage Data</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Export Format:</label>
+                        <select id="exportFormat">
+                            <option value="csv">CSV (Comma Separated)</option>
+                            <option value="excel">Excel Spreadsheet</option>
+                            <option value="json">JSON Data</option>
+                            <option value="xml">XML Format</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Date Filter:</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <input type="date" id="exportStartDate" value="2024-01-01">
+                            <input type="date" id="exportEndDate" value="2024-09-06">
+                        </div>
+                    </div>
+                    
+                    <button type="button" class="btn btn-primary" onclick="processExport()" style="width: 100%;">
+                        Export Data
+                    </button>
+                    
+                    <div id="exportProgress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <div id="exportProgressText">Preparing export...</div>
+                    </div>
+                    
+                    <div id="exportSuccess" style="display: none;" class="success-message">
+                        <strong>✅ Data Exported Successfully!</strong><br>
+                        <a href="#" id="exportDownloadLink">Click here to download your data</a>
+                    </div>
+                </form>
+            `);
+            
+            document.body.appendChild(modal);
+            modal.style.display = 'block';
+        }
+
+        function processExport() {
+            const format = document.getElementById('exportFormat').value;
+            const progressDiv = document.getElementById('exportProgress');
+            const progressFill = progressDiv.querySelector('.progress-fill');
+            const progressText = document.getElementById('exportProgressText');
+            const successDiv = document.getElementById('exportSuccess');
+            
+            progressDiv.style.display = 'block';
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 25;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    setTimeout(() => {
+                        progressDiv.style.display = 'none';
+                        successDiv.style.display = 'block';
+                        
+                        const exportedData = generateExportData(format);
+                        const blob = new Blob([exportedData.content], { type: exportedData.mimeType });
+                        const url = URL.createObjectURL(blob);
+                        
+                        const downloadLink = document.getElementById('exportDownloadLink');
+                        downloadLink.href = url;
+                        downloadLink.download = `MRL_Data_Export_${new Date().toISOString().split('T')[0]}.${exportedData.extension}`;
+                    }, 300);
+                    
+                    return;
+                }
+                
+                progressFill.style.width = progress + '%';
+                progressText.textContent = `Processing ${format.toUpperCase()} export... ${Math.floor(progress)}%`;
+            }, 200);
+        }
+
+        function generateExportData(format) {
+            const data = {
+                sampleResults: sampleData,
+                statistics: {
+                    totalSamples: sampleData.length,
+                    compliantSamples: sampleData.filter(s => s.status === 'Compliant').length,
+                    warningSamples: sampleData.filter(s => s.status === 'Warning').length,
+                    exceededSamples: sampleData.filter(s => s.status === 'Exceeded').length
+                }
+            };
+            
+            switch (format) {
+                case 'csv':
+                    const csvHeader = 'Sample ID,Antimicrobial,Detected Level,MRL,Status,Date\n';
+                    const csvRows = sampleData.map(row => 
+                        `${row.id},${row.antimicrobial},${row.detected},${row.mrl},${row.status},${row.date}`
+                    ).join('\n');
+                    return {
+                        content: csvHeader + csvRows,
+                        mimeType: 'text/csv',
+                        extension: 'csv'
+                    };
+                    
+                case 'json':
+                    return {
+                        content: JSON.stringify(data, null, 2),
+                        mimeType: 'application/json',
+                        extension: 'json'
+                    };
+                    
+                case 'xml':
+                    const xmlContent = `<?xml version="1.0" encoding="UTF-8"?>
+<MRLData>
+    <Statistics>
+        <TotalSamples>${data.statistics.totalSamples}</TotalSamples>
+        <CompliantSamples>${data.statistics.compliantSamples}</CompliantSamples>
+        <WarningSamples>${data.statistics.warningSamples}</WarningSamples>
+        <ExceededSamples>${data.statistics.exceededSamples}</ExceededSamples>
+    </Statistics>
+    <Samples>
+        ${sampleData.map(sample => `
+        <Sample>
+            <ID>${sample.id}</ID>
+            <Antimicrobial>${sample.antimicrobial}</Antimicrobial>
+            <DetectedLevel>${sample.detected}</DetectedLevel>
+            <MRL>${sample.mrl}</MRL>
+            <Status>${sample.status}</Status>
+            <Date>${sample.date}</Date>
+        </Sample>`).join('')}
+    </Samples>
+</MRLData>`;
+                    return {
+                        content: xmlContent,
+                        mimeType: 'application/xml',
+                        extension: 'xml'
+                    };
+                    
+                default:
+                    return {
+                        content: JSON.stringify(data, null, 2),
+                        mimeType: 'application/json',
+                        extension: 'json'
+                    };
+            }
+        }
+
+        function scheduleAnalysis() {
+            const modal = createModal('Schedule Analysis', `
+                <form id="scheduleForm">
+                    <div class="form-group">
+                        <label>Analysis Type:</label>
+                        <select id="analysisType">
+                            <option value="daily">Daily Monitoring</option>
+                            <option value="weekly">Weekly Trend Analysis</option>
+                            <option value="monthly">Monthly Compliance Review</option>
+                            <option value="quarterly">Quarterly AMU Assessment</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Frequency:</label>
+                        <select id="frequency">
+                            <option value="daily">Every Day</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="custom">Custom Schedule</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Start Date:</label>
+                        <input type="date" id="scheduleStartDate" value="${new Date().toISOString().split('T')[0]}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Notification Method:</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="emailAlert" checked>
+                                <label for="emailAlert">Email Alerts</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="dashboardAlert" checked>
+                                <label for="dashboardAlert">Dashboard Notifications</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="smsAlert">
+                                <label for="smsAlert">SMS Alerts (Critical only)</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Alert Thresholds:</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div>
+                                <label style="font-size: 0.9rem;">Warning at % of MRL:</label>
+                                <input type="number" id="warningThreshold" value="80" min="50" max="100">
+                            </div>
+                            <div>
+                                <label style="font-size: 0.9rem;">Critical at % of MRL:</label>
+                                <input type="number" id="criticalThreshold" value="100" min="90" max="150">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Additional Notes:</label>
+                        <textarea id="scheduleNotes" rows="3" placeholder="Enter any specific requirements or focus areas..."></textarea>
+                    </div>
+                    
+                    <button type="button" class="btn btn-primary" onclick="processSchedule()" style="width: 100%;">
+                        Schedule Analysis
+                    </button>
+                    
+                    <div id="scheduleSuccess" style="display: none;" class="success-message">
+                        <strong>✅ Analysis Scheduled Successfully!</strong><br>
+                        Your automated analysis has been configured and will start on the specified date.
+                        <div style="margin-top: 10px; font-size: 0.9rem;">
+                            <strong>Schedule ID:</strong> <span id="scheduleId"></span><br>
+                            <strong>Next Run:</strong> <span id="nextRun"></span>
+                        </div>
+                    </div>
+                </form>
+            `);
+            
+            document.body.appendChild(modal);
+            modal.style.display = 'block';
+        }
+
+        function processSchedule() {
+            const analysisType = document.getElementById('analysisType').value;
+            const frequency = document.getElementById('frequency').value;
+            const startDate = document.getElementById('scheduleStartDate').value;
+            const warningThreshold = document.getElementById('warningThreshold').value;
+            const criticalThreshold = document.getElementById('criticalThreshold').value;
+            const notes = document.getElementById('scheduleNotes').value;
+            
+            // Generate schedule ID and calculate next run
+            const scheduleId = 'SCH-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+            const nextRunDate = new Date(startDate);
+            
+            switch (frequency) {
+                case 'daily':
+                    nextRunDate.setDate(nextRunDate.getDate() + 1);
+                    break;
+                case 'weekly':
+                    nextRunDate.setDate(nextRunDate.getDate() + 7);
+                    break;
+                case 'monthly':
+                    nextRunDate.setMonth(nextRunDate.getMonth() + 1);
+                    break;
+            }
+            
+            setTimeout(() => {
+                document.getElementById('scheduleId').textContent = scheduleId;
+                document.getElementById('nextRun').textContent = nextRunDate.toLocaleDateString();
+                document.getElementById('scheduleSuccess').style.display = 'block';
+                
+                // Store schedule in memory (in real app, this would go to a database)
+                const schedule = {
+                    id: scheduleId,
+                    type: analysisType,
+                    frequency: frequency,
+                    startDate: startDate,
+                    nextRun: nextRunDate,
+                    thresholds: { warning: warningThreshold, critical: criticalThreshold },
+                    notes: notes,
+                    created: new Date()
+                };
+                
+                console.log('Schedule created:', schedule);
+            }, 1000);
+        }
+
+        function createModal(title, content) {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <span class="close" onclick="this.closest('.modal').remove()">&times;</span>
+                    <h2 style="margin-bottom: 25px; color: #333; border-bottom: 2px solid #667eea; padding-bottom: 10px;">${title}</h2>
+                    ${content}
+                </div>
+            `;
+            
+            // Close modal when clicking outside
+            modal.onclick = function(event) {
+                if (event.target === modal) {
+                    modal.remove();
+                }
+            };
+            
+            return modal;
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            initChart();
+            
+            // Simulate real-time updates
+            setInterval(function() {
+                const statCards = document.querySelectorAll('.stat-number');
+                statCards[0].textContent = Math.floor(Math.random() * 50) + 800; // Compliant samples
+                statCards[1].textContent = Math.floor(Math.random() * 10) + 20;  // Warning level
+                statCards[2].textContent = Math.floor(Math.random() * 5) + 3;    // MRL exceeded
+                statCards[3].textContent = Math.floor(Math.random() * 100) + 1150; // Total tests
+            }, 10000); // Update every 10 seconds
+        });
+    </script>
+</body>
+</html>

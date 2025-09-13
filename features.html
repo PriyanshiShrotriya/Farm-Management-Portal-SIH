@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmSafe Portal - Features</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f1f8e9, #e8f5e8);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2c5530, #4a7c59);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 60px 0;
+            background: white;
+            margin-bottom: 40px;
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+            color: #2c5530;
+            margin-bottom: 20px;
+        }
+
+        .page-header p {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            padding: 40px 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #4caf50, #45a049);
+            transition: left 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            left: 0;
+        }
+
+        .feature-icon {
+            font-size: 4rem;
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+            display: block;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
+        }
+
+        .feature-card h3 {
+            color: #2c5530;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+
+        .feature-button {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .feature-button:hover {
+            background: linear-gradient(135deg, #45a049, #3d8b40);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76,175,80,0.4);
+        }
+
+        .feature-benefits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .benefit-tag {
+            background: rgba(76, 175, 80, 0.1);
+            color: #2c5530;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .stats-section {
+            background: white;
+            padding: 60px 0;
+            margin: 60px 0;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+
+        .stat-card {
+            padding: 30px 20px;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #4caf50;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: 80px 0;
+            background: linear-gradient(135deg, #2c5530, #4a7c59);
+            color: white;
+            margin-top: 60px;
+            border-radius: 20px;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            background: white;
+            color: #2c5530;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255,255,255,0.3);
+        }
+
+        .footer {
+            background: #2c5530;
+            color: white;
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Animation for page load */
+        .feature-card {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .feature-card:nth-child(1) { animation-delay: 0.1s; }
+        .feature-card:nth-child(2) { animation-delay: 0.2s; }
+        .feature-card:nth-child(3) { animation-delay: 0.3s; }
+        .feature-card:nth-child(4) { animation-delay: 0.4s; }
+        .feature-card:nth-child(5) { animation-delay: 0.5s; }
+        .feature-card:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <div class="logo-icon">🌱</div>
+                <h1>FarmSafe Portal</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="features.html">Features</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="support.html">Support</a></li>
+                <li><a href="https://www.agriwelfare.gov.in/" target="_blank">Resources</a></li>
+            </ul>
+            <a href="index.html" class="back-btn">← Back to Home</a>
+            <button class="language-btn" onclick="toggleLanguage()" id="langBtn">
+                    🌐 हिंदी
+                </button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1 data-en="Powerful Tools for Modern Farmers" data-hi="आधुनिक किसानों के लिए शक्तिशाली उपकरण">Powerful Tools for Modern Farmers</h1>
+                <p data-en="Comprehensive solutions for Maximum Residue Level monitoring, Antimicrobial Use management, and smart farm compliance tracking" data-hi="अधिकतम अवशेष स्तर की निगरानी, ​​रोगाणुरोधी उपयोग प्रबंधन, और स्मार्ट फार्म अनुपालन ट्रैकिंग के लिए व्यापक समाधान. ">Comprehensive solutions for Maximum Residue Level monitoring, Antimicrobial Use management, and smart farm compliance tracking</p>
+            </div>
+        </section>
+
+        <section class="container">
+            <div class="features-grid">
+                <!-- MRL Monitoring -->
+                <div class="feature-card" onclick="openMRLMonitoring()">
+                    <div class="feature-icon">🧪</div>
+                    <h3 data-en="MRL Monitoring" data-hi="MRL निगरानी">MRL Monitoring</h3>
+                    <div class="feature-benefits">
+                        <span class="benefit-tag" data-en="Real-time Tracking" data-hi="वास्तविक समय ट्रैकिंग">Real-time Tracking</span>
+                        <span class="benefit-tag" data-en="" data-hi="">Compliance Alerts</span>
+                        <span class="benefit-tag" data-en="" data-hi="">Detailed Records</span>
+                    </div>
+                    <p data-en="" data-hi="">Real-time tracking of Maximum Residue Levels across all your crops and livestock. Get alerts before limits are exceeded and maintain detailed compliance records with automated testing schedules.</p>
+                    <button class="feature-button" data-en="" data-hi="">Launch MRL Dashboard</button>
+                </div>
+
+                <!-- AMU Management -->
+                <div class="feature-card" onclick="openAMUManagement()">
+                    <div class="feature-icon">💊</div>
+                    <h3>AMU Management</h3>
+                    <div class="feature-benefits">
+                        <span class="benefit-tag">Withdrawal Periods</span>
+                        <span class="benefit-tag">Dosage Tracking</span>
+                        <span class="benefit-tag">Vet Integration</span>
+                    </div>
+                    <p>Comprehensive Antimicrobial Use tracking with automated withdrawal period calculations, dosage monitoring, and veterinary prescription management for complete treatment oversight.</p>
+                    <button class="feature-button">Access AMU System</button>
+                </div>
+
+                <!-- Analytics Dashboard -->
+                <div class="feature-card" onclick="openAnalyticsDashboard()">
+                    <div class="feature-icon">📊</div>
+                    <h3>Analytics Dashboard</h3>
+                    <div class="feature-benefits">
+                        <span class="benefit-tag">Visual Insights</span>
+                        <span class="benefit-tag">Custom Reports</span>
+                        <span class="benefit-tag">Trend Analysis</span>
+                    </div>
+                    <p>Visual insights into your farm's chemical usage patterns, compliance status, and optimization opportunities with customizable reporting tools and predictive analytics.</p>
+                    <button class="feature-button">View Analytics</button>
+                </div>
+
+                <!-- Smart Alerts -->
+                <div class="feature-card" onclick="openSmartAlerts()">
+                    <div class="feature-icon">🔔</div>
+                    <h3>Smart Alerts</h3>
+                    <div class="feature-benefits">
+                        <span class="benefit-tag">Proactive Notifications</span>
+                        <span class="benefit-tag">Multi-channel</span>
+                        <span class="benefit-tag">Custom Rules</span>
+                    </div>
+                    <p>Proactive notifications for withdrawal periods, upcoming inspections, expiring chemicals, and regulatory changes that affect your operations through SMS, email, and app notifications.</p>
+                    <button class="feature-button">Configure Alerts</button>
+                </div>
+
+                <!-- Mobile Access -->
+                <div class="feature-card" onclick="openMobileAccess()">
+                    <div class="feature-icon">&#128185;</div>
+                    <h3>Live Stock Track</h3>
+                    <div class="feature-benefits">
+                        <span class="benefit-tag">Field Entry</span>
+                        <span class="benefit-tag">Barcode Scanning</span>
+                        <span class="benefit-tag">Offline Mode</span>
+                    </div>
+                    <p>Full-featured mobile app for field data entry, barcode scanning, and real-time access to all your farm management data wherever you are, with offline capability for remote areas.</p>
+                    <button class="feature-button">Entry</button>
+                </div>
+
+                <!-- Breed Recognition -->
+                <div class="feature-card" onclick="openBreedRecognition()">
+                    <div class="feature-icon">🐄</div>
+                    <h3>Breed Recognition</h3>
+                    <div class="feature-benefits">
+                        <span class="benefit-tag">AI-Powered</span>
+                        <span class="benefit-tag">Photo/Video</span>
+                        <span class="benefit-tag">Instant ID</span>
+                    </div>
+                    <p>AI-powered breed recognition through photos or videos, making livestock identification faster, more reliable, and useful for large-scale farm management systems with automatic record updates.</p>
+                    <button class="feature-button">Try Recognition</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats-section">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">10,000+</div>
+                        <div class="stat-label">Active Farmers</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">98.5%</div>
+                        <div class="stat-label">Compliance Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">2.5M+</div>
+                        <div class="stat-label">Animals Monitored</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">System Monitoring</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="container">
+                <h2>Ready to Transform Your Farm Management?</h2>
+                <p>Join thousands of farmers who have already improved their compliance and efficiency with FarmSafe Portal</p>
+                <div class="cta-buttons">
+                    <a href="#" class="cta-btn" onclick="startFreeTrial()">Start Free Trial</a>
+                    <a href="#" class="cta-btn" onclick="scheduleDemo()">Schedule Demo</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 FarmSafe Portal. Empowering sustainable agriculture through smart compliance management.</p>
+            <p>🌱 Protecting food safety • Ensuring compliance • Supporting farmers</p>
+        </div>
+    </footer>
+
+    <script>
+        // Feature navigation functions
+        function openMRLMonitoring() {
+            // Redirect to MRL monitoring dashboard
+            window.location.href = 'MRL_monitoring.html';
+            // Or for demo purposes, show alert
+            
+        }
+
+        function openAMUManagement() {
+            window.location.href = 'amu_entry.html';
+            
+        }
+
+        function openAnalyticsDashboard() {
+            window.location.href = 'Data.html';
+            
+        }
+
+        function openSmartAlerts() {
+            window.location.href = 'Alert.html';
+            
+        }
+
+        function openMobileAccess() {
+            window.location.href = 'livestock track.html';
+            
+        }
+
+        function openBreedRecognition() {
+            window.location.href = 'breed-recognition.html';
+            showFeatureDemo('Breed Recognition', 'Starting Breed Recognition Tool...\n\n• AI-powered image analysis\n• Support for 200+ livestock breeds\n• Instant identification results\n• Automatic record updates');
+        }
+
+        function showFeatureDemo(featureName, message) {
+            alert(`${featureName}\n\n${message}\n\nNote: This is a demo. In the full version, you would be redirected to the actual feature page.`);
+        }
+
+        function startFreeTrial() {
+            alert('Starting your free 30-day trial!\n\nYou will receive:\n• Full access to all features\n• Priority customer support\n• Free setup assistance\n• No commitment required');
+        }
+
+        function scheduleDemo() {
+            alert('Scheduling a personalized demo!\n\nOur team will contact you to:\n• Show you the platform live\n• Discuss your specific needs\n• Provide customized recommendations\n• Answer all your questions');
+        }
+
+        // Add smooth scrolling for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add loading animation effect
+        window.addEventListener('load', function() {
+            const cards = document.querySelectorAll('.feature-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

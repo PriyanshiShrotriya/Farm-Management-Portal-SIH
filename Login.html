@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - FarmSafe Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f1f8e9, #c8e6c9);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .register-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 600px;
+        }
+
+        .register-left {
+            background: linear-gradient(135deg, #2c5530, #4a7c59);
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .register-left h1 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+        }
+
+        .register-left p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .register-left .features-list {
+            list-style: none;
+            text-align: left;
+        }
+
+        .register-left .features-list li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .register-left .features-list li::before {
+            content: "✓";
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .register-right {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .register-header h2 {
+            color: #2c5530;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .register-header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .language-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #2c5530;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .language-toggle:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .register-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #2c5530;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: #fafafa;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4caf50;
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.2);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            font-weight: normal;
+            font-size: 0.9rem;
+            color: #555;
+            cursor: pointer;
+        }
+
+        .register-btn {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .register-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.4);
+        }
+
+        .register-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+
+        .login-link a {
+            color: #4caf50;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .register-container {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+
+            .register-left {
+                order: 2;
+                padding: 30px;
+            }
+
+            .register-right {
+                order: 1;
+                padding: 30px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .language-toggle {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+            }
+        }
+
+        .back-to-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #2c5530;
+            text-decoration: none;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .back-to-home:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <a href="#" class="back-to-home" onclick="goToHome()" data-en="← Back to Home" data-hi="← होम पर वापस">← Back to Home</a>
+    
+    <button class="language-toggle" onclick="toggleLanguage()" id="langBtn">
+        🌐 हिंदी
+    </button>
+
+    <div class="register-container">
+        <div class="register-left">
+            <h1 data-en="Join FarmSafe Portal" data-hi="फार्मसेफ पोर्टल में शामिल हों">Join FarmSafe Portal</h1>
+            <p data-en="Start managing your farm's compliance and safety with our comprehensive platform designed specifically for Indian farmers." data-hi="भारतीय किसानों के लिए विशेष रूप से डिज़ाइन किए गए हमारे व्यापक प्लेटफॉर्म के साथ अपने खेत की अनुपालन और सुरक्षा का प्रबंधन शुरू करें।">Start managing your farm's compliance and safety with our comprehensive platform designed specifically for Indian farmers.</p>
+            
+            <ul class="features-list">
+                <li data-en="Real-time MRL monitoring" data-hi="वास्तविक समय MRL निगरानी">Real-time MRL monitoring</li>
+                <li data-en="AMU tracking & compliance" data-hi="AMU ट्रैकिंग और अनुपालन">AMU tracking & compliance</li>
+                <li data-en="Mobile app access" data-hi="मोबाइल ऐप एक्सेस">Mobile app access</li>
+                <li data-en="Expert support" data-hi="विशेषज्ञ सहायता">Expert support</li>
+                <li data-en="Government compliance" data-hi="सरकारी अनुपालन">Government compliance</li>
+            </ul>
+        </div>
+
+        <div class="register-right">
+            <div class="register-header">
+                <h2 data-en="Create Your Account" data-hi="अपना खाता बनाएं">Create Your Account</h2>
+                <p data-en="Fill in your details to get started" data-hi="शुरू करने के लिए अपना विवरण भरें">Fill in your details to get started</p>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                <span data-en="Registration successful! Welcome to FarmSafe Portal." data-hi="पंजीकरण सफल! फार्मसेफ पोर्टल में आपका स्वागत है।">Registration successful! Welcome to FarmSafe Portal.</span>
+            </div>
+
+            <div class="error-message" id="errorMessage">
+                <span data-en="Please fill in all required fields correctly." data-hi="कृपया सभी आवश्यक फ़ील्ड सही तरीके से भरें।">Please fill in all required fields correctly.</span>
+            </div>
+
+            <form class="register-form" id="registerForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label data-en="First Name *" data-hi="पहला नाम *">First Name *</label>
+                        <input type="text" id="firstName" name="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-en="Last Name *" data-hi="अंतिम नाम *">Last Name *</label>
+                        <input type="text" id="lastName" name="lastName" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label data-en="Email Address *" data-hi="ईमेल पता *">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-en="Phone Number *" data-hi="फोन नंबर *">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="+91">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label data-en="Password *" data-hi="पासवर्ड *">Password *</label>
+                        <input type="password" id="password" name="password" required minlength="8">
+                    </div>
+                    <div class="form-group">
+                        <label data-en="Confirm Password *" data-hi="पासवर्ड की पुष्टि करें *">Confirm Password *</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label data-en="Farm Name *" data-hi="खेत का नाम *">Farm Name *</label>
+                        <input type="text" id="farmName" name="farmName" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-en="Farm Type *" data-hi="खेत का प्रकार *">Farm Type *</label>
+                        <select id="farmType" name="farmType" required>
+                            <option value="" data-en="Select Farm Type" data-hi="खेत का प्रकार चुनें">Select Farm Type</option>
+                            <option value="crops" data-en="Crop Farming" data-hi="फसल खेती">Crop Farming</option>
+                            <option value="livestock" data-en="Livestock" data-hi="पशुधन">Livestock</option>
+                            <option value="dairy" data-en="Dairy Farm" data-hi="डेयरी फार्म">Dairy Farm</option>
+                            <option value="poultry" data-en="Poultry Farm" data-hi="पोल्ट्री फार्म">Poultry Farm</option>
+                            <option value="mixed" data-en="Mixed Farming" data-hi="मिश्रित खेती">Mixed Farming</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label data-en="State *" data-hi="राज्य *">State *</label>
+                        <select id="state" name="state" required>
+                            <option value="" data-en="Select State" data-hi="राज्य चुनें">Select State</option>
+                            <option value="uttar-pradesh">Uttar Pradesh</option>
+                            <option value="maharashtra">Maharashtra</option>
+                            <option value="bihar">Bihar</option>
+                            <option value="west-bengal">West Bengal</option>
+                            <option value="madhya-pradesh">Madhya Pradesh</option>
+                            <option value="tamil-nadu">Tamil Nadu</option>
+                            <option value="rajasthan">Rajasthan</option>
+                            <option value="karnataka">Karnataka</option>
+                            <option value="gujarat">Gujarat</option>
+                            <option value="andhra-pradesh">Andhra Pradesh</option>
+                            <option value="odisha">Odisha</option>
+                            <option value="telangana">Telangana</option>
+                            <option value="kerala">Kerala</option>
+                            <option value="jharkhand">Jharkhand</option>
+                            <option value="assam">Assam</option>
+                            <option value="punjab">Punjab</option>
+                            <option value="chhattisgarh">Chhattisgarh</option>
+                            <option value="haryana">Haryana</option>
+                            <option value="uttarakhand">Uttarakhand</option>
+                            <option value="himachal-pradesh">Himachal Pradesh</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label data-en="Farm Size (acres)" data-hi="खेत का आकार (एकड़)">Farm Size (acres)</label>
+                        <input type="number" id="farmSize" name="farmSize" min="0.1" step="0.1">
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label data-en="Address" data-hi="पता">Address</label>
+                    <textarea id="address" name="address" placeholder="Complete farm address"></textarea>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms" data-en="I agree to the Terms of Service and Privacy Policy *" data-hi="मैं सेवा की शर्तों और गोपनीयता नीति से सहमत हूं *">I agree to the Terms of Service and Privacy Policy *</label>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="newsletter" name="newsletter">
+                    <label for="newsletter" data-en="Subscribe to our newsletter for farming tips and updates" data-hi="खेती की युक्तियों और अपडेट के लिए हमारे न्यूज़लेटर की सदस्यता लें">Subscribe to our newsletter for farming tips and updates</label>
+                </div>
+
+                <button type="submit" class="register-btn" data-en="Create Account" data-hi="खाता बनाएं">Create Account</button>
+            </form>
+
+            <div class="login-link">
+                <span data-en="Already have an account?" data-hi="क्या आपके पास पहले से खाता है?">Already have an account?</span>
+                <a href="signIn.html" onclick="goTosignIn()" data-en="Sign In" data-hi="साइन इन करें">Sign In</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isHindi = false;
+
+        function toggleLanguage() {
+            const langBtn = document.getElementById('langBtn');
+            const elementsWithTranslation = document.querySelectorAll('[data-en][data-hi]');
+            
+            isHindi = !isHindi;
+            
+            elementsWithTranslation.forEach(element => {
+                if (isHindi) {
+                    element.textContent = element.getAttribute('data-hi');
+                } else {
+                    element.textContent = element.getAttribute('data-en');
+                }
+            });
+            
+            // Update language button
+            langBtn.innerHTML = isHindi ? '🌐 English' : '🌐 हिंदी';
+            
+            // Update document language attribute
+            document.documentElement.lang = isHindi ? 'hi' : 'en';
+            
+            // Update select options
+            updateSelectOptions();
+        }
+
+        function updateSelectOptions() {
+            const farmTypeSelect = document.getElementById('farmType');
+            const stateSelect = document.getElementById('state');
+            
+            // Update farm type options
+            const farmTypeOptions = farmTypeSelect.querySelectorAll('option');
+            farmTypeOptions.forEach(option => {
+                if (option.getAttribute('data-en') && option.getAttribute('data-hi')) {
+                    option.textContent = isHindi ? option.getAttribute('data-hi') : option.getAttribute('data-en');
+                }
+            });
+            
+            // Update state options (keeping English names but could add Hindi if needed)
+            const stateOptions = stateSelect.querySelectorAll('option');
+            stateOptions.forEach(option => {
+                if (option.getAttribute('data-en') && option.getAttribute('data-hi')) {
+                    option.textContent = isHindi ? option.getAttribute('data-hi') : option.getAttribute('data-en');
+                }
+            });
+        }
+
+        function validateForm() {
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const farmName = document.getElementById('farmName').value.trim();
+            const farmType = document.getElementById('farmType').value;
+            const state = document.getElementById('state').value;
+            const terms = document.getElementById('terms').checked;
+
+            // Basic validation
+            if (!firstName || !lastName || !email || !phone || !password || !farmName || !farmType || !state || !terms) {
+                return false;
+            }
+
+            // Password validation
+            if (password.length < 8) {
+                return false;
+            }
+
+            if (password !== confirmPassword) {
+                return false;
+            }
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return false;
+            }
+
+            // Phone validation (basic)
+            const phoneRegex = /^[\+]?[\d\s\-\(\)]{10,}$/;
+            if (!phoneRegex.test(phone)) {
+                return false;
+            }
+
+            return true;
+        }
+
+        function showMessage(type, show = true) {
+            const successMsg = document.getElementById('successMessage');
+            const errorMsg = document.getElementById('errorMessage');
+            
+            if (type === 'success') {
+                successMsg.style.display = show ? 'block' : 'none';
+                errorMsg.style.display = 'none';
+            } else {
+                errorMsg.style.display = show ? 'block' : 'none';
+                successMsg.style.display = 'none';
+            }
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (validateForm()) {
+                // Simulate registration process
+                const submitBtn = document.querySelector('.register-btn');
+                submitBtn.disabled = true;
+                submitBtn.textContent = isHindi ? 'पंजीकरण हो रहा है...' : 'Registering...';
+                
+                setTimeout(() => {
+                    showMessage('success');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = isHindi ? 'खाता बनाएं' : 'Create Account';
+                    
+                    // Reset form after successful registration
+                    setTimeout(() => {
+                        this.reset();
+                        showMessage('success', false);
+                        alert(isHindi ? 'पंजीकरण सफल! आप अब लॉगिन कर सकते हैं।' : 'Registration successful! You can now login.');
+                    }, 2000);
+                }, 1500);
+            } else {
+                showMessage('error');
+                setTimeout(() => showMessage('error', false), 5000);
+            }
+        });
+
+        // Password confirmation validation
+        document.getElementById('confirmPassword').addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = this.value;
+            
+            if (password !== confirmPassword && confirmPassword.length > 0) {
+                this.style.borderColor = '#f44336';
+            } else {
+                this.style.borderColor = '#e0e0e0';
+            }
+        });
+
+        function goToHome() {
+            alert(isHindi ? 'होम पेज पर जा रहे हैं...' : 'Going to home page...');
+        }
+
+        function goTosignIn() {
+            // alert(isHindi ? 'लॉगिन पेज पर जा रहे हैं...' : 'Going to login page...');
+        }
+
+        // Auto-fill phone number with +91 prefix
+        document.getElementById('phone').addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length > 0 && !value.startsWith('91')) {
+                if (value.length === 10) {
+                    this.value = '+91 ' + value;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f1f8e9, #c8e6c9);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Language selector */
+        .language-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+        }
+
+        .language-btn {
+            background:white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: #2C5530;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            min-width: 80px;
+        }
+
+        .language-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .signin-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .signin-header {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            padding: 40px 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .signin-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .signin-header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .signin-form {
+            padding: 40px 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #374151;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #22c55e;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+        }
+
+        .form-group input:valid {
+            border-color: #22c55e;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 25px;
+        }
+
+        .forgot-password a {
+            color: #22c55e;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password a:hover {
+            color: #16a34a;
+        }
+
+        .signin-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .signin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(34, 197, 94, 0.3);
+        }
+
+        .signin-btn:active {
+            transform: translateY(0);
+        }
+
+        .divider {
+            margin: 30px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e5e7eb;
+        }
+
+        .divider span {
+            background: white;
+            color: #6b7280;
+            padding: 0 20px;
+            font-size: 14px;
+        }
+
+        .social-signin {
+            margin-bottom: 25px;
+        }
+
+        .social-btn {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .social-btn:hover {
+            border-color: #22c55e;
+            background: #f0fdf4;
+        }
+
+        .signup-link {
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .signup-link a {
+            color: #22c55e;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .signup-link a:hover {
+            color: #16a34a;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .language-selector {
+                top: 10px;
+                right: 10px;
+            }
+            
+            .language-btn {
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+            
+            .signin-container {
+                border-radius: 0;
+                height: 100vh;
+            }
+            
+            .signin-header {
+                padding: 30px 20px;
+            }
+            
+            .signin-form {
+                padding: 30px 20px;
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="language-selector">
+        <button class="language-btn" id="languageToggle">
+           🌐 हिंदी
+        </button>
+    </div>
+    
+    <div class="signin-container">
+        <div class="signin-header">
+            <h1 id="welcomeTitle">Welcome Back</h1>
+            <p id="welcomeSubtitle">Sign in to your account</p>
+        </div>
+        
+        <form class="signin-form" id="signinForm">
+            <div class="form-group">
+                <label for="email" id="emailLabel">Email Address or Phone Number</label>
+                <input type="text" id="email" name="email" placeholder="Enter email or phone number" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password" id="passwordLabel">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <div class="forgot-password">
+                <a href="#" id="forgotPassword">Forgot Password?</a>
+            </div>
+            
+            <button type="submit" class="signin-btn" id="signinBtn">
+                Sign In
+            </button>
+            
+            <div class="divider">
+                <span id="dividerText">or continue with</span>
+            </div>
+            
+            <div class="social-signin">
+                <button type="button" class="social-btn" id="googleBtn">
+                    Google
+                </button>
+            </div>
+            
+            <div class="signup-link">
+                <span id="signupText">Don't have an account?</span> <a href="Login.html" id="signupLink">Register</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Form handling
+        const signinForm = document.getElementById('signinForm');
+        const signinBtn = document.getElementById('signinBtn');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+
+        signinForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Add loading state
+            signinBtn.classList.add('loading');
+            signinBtn.textContent = '';
+            
+            // Simulate API call
+            setTimeout(() => {
+                // Remove loading state
+                signinBtn.classList.remove('loading');
+                signinBtn.textContent = isHindi ? 'साइन इन करें' : 'Sign In';
+                
+                // Here you would typically make an actual API call
+                const email = emailInput.value;
+                const password = passwordInput.value;
+                
+                console.log('Sign in attempt:', { email, password });
+                alert('Sign in functionality would be implemented here!');
+            }, 2000);
+        });
+
+        // Google signin handler
+        document.getElementById('googleBtn').addEventListener('click', function() {
+            console.log('Google sign in clicked');
+            alert('Google sign in would be implemented here!');
+        });
+
+        // Forgot password handler
+        document.getElementById('forgotPassword').addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Forgot password clicked');
+            alert('Forgot password functionality would be implemented here!');
+        });
+
+        // Sign up link handler
+        document.getElementById('signupLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Sign up link clicked');
+            alert('Redirect to sign up page would happen here!');
+        });
+
+        // Enhanced input validation for email/phone
+        function validateInput(input) {
+            const value = input.value.trim();
+            let isValid = false;
+            
+            if (input.id === 'email') {
+                // Check if it's an email or phone number
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+                
+                isValid = emailRegex.test(value) || phoneRegex.test(value);
+            } else {
+                isValid = input.checkValidity();
+            }
+            
+            if (isValid && value.length > 0) {
+                input.style.borderColor = '#22c55e';
+            } else if (value.length > 0) {
+                input.style.borderColor = '#ef4444';
+            } else {
+                input.style.borderColor = '#e5e7eb';
+            }
+        }
+
+        emailInput.addEventListener('blur', () => validateInput(emailInput));
+        passwordInput.addEventListener('blur', () => validateInput(passwordInput));
+        
+        // Real-time validation as user types
+        emailInput.addEventListener('input', () => validateInput(emailInput));
+
+        // Language toggle functionality
+        const languageToggle = document.getElementById('languageToggle');
+        let isHindi = false;
+
+        const translations = {
+            english: {
+                languageBtn: '🌐 हिंदी',
+                welcomeTitle: 'Welcome Back',
+                welcomeSubtitle: 'Sign in to your account',
+                emailLabel: 'Email Address or Phone Number',
+                passwordLabel: 'Password',
+                emailPlaceholder: 'Enter email or phone number',
+                forgotPassword: 'Forgot Password?',
+                signinBtn: 'Sign In',
+                dividerText: 'or continue with',
+                signupText: "Don't have an account?",
+                signupLink: 'Sign up'
+            },
+            hindi: {
+                languageBtn: '🌐 English',
+                welcomeTitle: 'वापस स्वागत है',
+                welcomeSubtitle: 'अपने खाते में साइन इन करें',
+                emailLabel: 'ईमेल पता या फोन नंबर',
+                passwordLabel: 'पासवर्ड',
+                emailPlaceholder: 'ईमेल या फोन नंबर दर्ज करें',
+                forgotPassword: 'पासवर्ड भूल गए?',
+                signinBtn: 'साइन इन करें',
+                dividerText: 'या जारी रखें',
+                signupText: 'खाता नहीं है?',
+                signupLink: 'साइन अप करें'
+            }
+        };
+
+        function updateLanguage() {
+            const lang = isHindi ? translations.hindi : translations.english;
+            
+            languageToggle.textContent = lang.languageBtn;
+            document.getElementById('welcomeTitle').textContent = lang.welcomeTitle;
+            document.getElementById('welcomeSubtitle').textContent = lang.welcomeSubtitle;
+            document.getElementById('emailLabel').textContent = lang.emailLabel;
+            document.getElementById('passwordLabel').textContent = lang.passwordLabel;
+            document.getElementById('email').placeholder = lang.emailPlaceholder;
+            document.getElementById('forgotPassword').textContent = lang.forgotPassword;
+            document.getElementById('signinBtn').textContent = lang.signinBtn;
+            document.getElementById('dividerText').textContent = lang.dividerText;
+            document.getElementById('signupText').textContent = lang.signupText;
+            document.getElementById('signupLink').textContent = lang.signupLink;
+        }
+
+        languageToggle.addEventListener('click', function() {
+            isHindi = !isHindi;
+            updateLanguage();
+            console.log('Language switched to:', isHindi ? '🌐 Hindi' : '🌐 English');
+        });
+    </script>
+</body>
+</html>

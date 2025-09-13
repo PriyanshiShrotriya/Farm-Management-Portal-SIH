@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Smart MRL & AMU Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #707374;
+            background: linear-gradient(135deg, #ef96eaec 0%, #58a5e4 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .content-section {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideInUp 0.8s ease-out forwards;
+        }
+
+        .content-section:nth-child(3) { animation-delay: 0.2s; }
+        .content-section:nth-child(4) { animation-delay: 0.4s; }
+        .content-section:nth-child(5) { animation-delay: 0.6s; }
+
+        .section-title {
+            font-size: 2rem;
+            color: #2bcdf1;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .team-member {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: scale(1.05);
+        }
+
+        .team-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #a6f627 100%);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            text-align: center;
+            padding: 50px;
+            border-radius: 20px;
+            margin-top: 40px;
+        }
+
+        .cta-button {
+            background: white;
+            color: #4facfe;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero-section">
+            <h1>Smart MRL & AMU Management</h1>
+            <p>Revolutionizing Maximum Residue Limit (MRL) and Antimicrobial Usage (AMU) compliance through intelligent automation and data-driven insights.</p>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">Our Mission</h2>
+            <p>We empower agricultural producers, food manufacturers, and regulatory bodies with cutting-edge technology to ensure food safety, optimize antimicrobial usage, and maintain compliance with international MRL standards. Our smart management system transforms complex regulatory requirements into actionable intelligence.</p>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">What We Do</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>🎯 MRL Monitoring</h3>
+                    <p>Real-time tracking and analysis of pesticide and drug residues to ensure compliance with global safety standards.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>💊 AMU Optimization</h3>
+                    <p>Intelligent antimicrobial usage management to reduce resistance while maintaining animal health and productivity.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📊 Data Analytics</h3>
+                    <p>Advanced reporting and predictive analytics to identify trends and optimize treatment protocols.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔔 Smart Alerts</h3>
+                    <p>Automated notifications for withdrawal periods, compliance deadlines, and potential safety issues.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📱 Mobile Integration</h3>
+                    <p>Field-ready mobile apps for real-time data collection, treatment logging, and instant compliance verification.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🤖 AI Risk Assessment</h3>
+                    <p>Machine learning algorithms that predict contamination risks and recommend preventive measures before issues occur.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">Why Choose Us</h2>
+            <p><strong>Regulatory Expertise:</strong> Deep understanding of global MRL regulations and AMU guidelines across different markets and commodities.</p>
+            <br>
+            <p><strong>Smart Technology:</strong> AI-powered algorithms that learn from your data to provide personalized recommendations and risk assessments.</p>
+            <br>
+            <p><strong>Seamless Integration:</strong> Easy integration with existing farm management systems, laboratory networks, and supply chain platforms.</p>
+            <br>
+            <p><strong>Proven Results:</strong> Our clients report 85% reduction in compliance violations and 40% improvement in antimicrobial stewardship metrics.</p>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">Our Team</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="team-avatar">KA</div>
+                    <h3>Kishori Aggarwal</h3>
+                    <p><strong>Team Leader</strong><br>
+                    Leading the development of innovative MRL & AMU management solutions</p>
+                </div>
+                <div class="team-member">
+                    <div class="team-avatar">PB</div>
+                    <h3>Priyanka Bhati</h3>
+                    <p><strong>Core Developer</strong><br>
+                    Specializing in regulatory compliance and data management systems</p>
+                </div>
+                <div class="team-member">
+                    <div class="team-avatar">PS</div>
+                    <h3>Priyanshi Shrotriya</h3>
+                    <p><strong>Systems Analyst</strong><br>
+                    Expert in antimicrobial usage optimization and monitoring protocols</p>
+                </div>
+                <div class="team-member">
+                    <div class="team-avatar">P</div>
+                    <h3>Pratigya</h3>
+                    <p><strong>Quality Assurance Lead</strong><br>
+                    Ensuring accuracy and reliability in compliance tracking systems</p>
+                </div>
+                <div class="team-member">
+                    <div class="team-avatar">SK</div>
+                    <h3>Shreyanh Khemka</h3>
+                    <p><strong>Technical Architect</strong><br>
+                    Designing scalable solutions for MRL monitoring and reporting</p>
+                </div>
+                <div class="team-member">
+                    <div class="team-avatar">SK</div>
+                    <h3>Sanskar Khari</h3>
+                    <p><strong>Data Analyst</strong><br>
+                    Creating intelligent analytics for predictive compliance management</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <h2>Ready to Transform Your Compliance Management?</h2>
+            <p>Join hundreds of producers who trust Smart MRL & AMU Management for their food safety needs.</p>
+            <button class="cta-button" onclick="showDemo()">Request a Demo</button>
+        </div>
+    </div>
+
+    <script>
+        function showDemo() {
+            alert('Thank you for your interest! Our team will contact you within 24 hours to schedule your personalized demo.');
+        }
+
+        // Add smooth scrolling and intersection observer for animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.feature-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'translateY(-10px)';
+                    }, 150);
+                });
+            });
+
+            // Add parallax effect on scroll
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const parallax = document.querySelector('.hero-section');
+                const speed = scrolled * 0.5;
+                parallax.style.transform = `translateY(${speed}px)`;
+            });
+        });
+    </script>
+</body>
+</html>

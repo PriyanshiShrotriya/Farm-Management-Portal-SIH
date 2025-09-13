@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Livestock Antimicrobial Record</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #3CAEA3,#EDF67D);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 420px;
+      width: 100%;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.7rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .submit-btn {
+      background: #28a745;
+      color: white;
+      margin-bottom: 0.8rem;
+    }
+    .translate-btn {
+      background: #007bff;
+      color: white;
+    }
+    @media (max-width: 500px) {
+      .container {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 id="form-title">Antimicrobial Record</h2>
+    <form id="antimicrobial-form" action="submit_antimicrobial.php" method="POST">
+      <label id="label-id" for="unique_id">Unique Livestock ID</label>
+      <input type="text" id="unique_id" name="unique_id" required />
+
+      <label id="label-antimicrobial" for="antimicrobial">Antimicrobial Name</label>
+      <input type="text" id="antimicrobial" name="antimicrobial" required />
+
+      <label id="label-date" for="date">Date Administered</label>
+      <input type="date" id="date" name="date" required />
+
+      <label id="label-administered" for="administered_by">Administered By</label>
+      <input type="text" id="administered_by" name="administered_by" required />
+
+      <label id="label-method" for="method">Method of Administration</label>
+      <select id="method" name="method" required>
+        <option value="injection">Injection</option>
+        <option value="oral">Oral</option>
+      </select>
+
+      <label id="label-dosage" for="dosage">Dosage (mg)</label>
+      <input type="number" id="dosage" name="dosage" required />
+
+      <button type="submit" class="submit-btn" id="submit-btn">Submit</button>
+    </form>
+    <button class="translate-btn" onclick="translateToHindi()" id="translate-btn">Translate to Hindi</button>
+  </div>
+
+  <script>
+    let translated = false;
+
+    function translateToHindi() {
+      if (!translated) {
+        document.getElementById('form-title').innerText = 'प्रतिजैविक विवरण';
+        document.getElementById('label-id').innerText = 'पशुधन की विशिष्ट आईडी';
+        document.getElementById('label-antimicrobial').innerText = 'प्रतिजैविक का नाम';
+        document.getElementById('label-date').innerText = 'प्रशासन की तिथि';
+        document.getElementById('label-administered').innerText = 'किसके द्वारा दिया गया';
+        document.getElementById('label-method').innerText = 'कैसे दिया गया';
+        document.getElementById('label-dosage').innerText = 'खुराक (मिग्रा)';
+        document.getElementById('submit-btn').innerText = 'जमा करें';
+        document.getElementById('translate-btn').innerText = 'Translate to English';
+        translated = true;
+      } else {
+        document.getElementById('form-title').innerText = 'Antimicrobial Record';
+        document.getElementById('label-id').innerText = 'Unique Livestock ID';
+        document.getElementById('label-antimicrobial').innerText = 'Antimicrobial Name';
+        document.getElementById('label-date').innerText = 'Date Administered';
+        document.getElementById('label-administered').innerText = 'Administered By';
+        document.getElementById('label-method').innerText = 'Method of Administration';
+        document.getElementById('label-dosage').innerText = 'Dosage (mg)';
+        document.getElementById('submit-btn').innerText = 'Submit';
+        document.getElementById('translate-btn').innerText = 'Translate to Hindi';
+        translated = false;
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart MRL & AMU Analytics Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    background-clip: text; /* Standard property for compatibility */
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    margin-bottom: 10px;
+        }
+
+        .header p {
+            text-align: center;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .control-group label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        select, input {
+            padding: 10px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 14px;
+            background: white;
+            transition: border-color 0.3s ease;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .metric-label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-good { color: #10b981; }
+        .status-warning { color: #f59e0b; }
+        .status-critical { color: #ef4444; }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .data-table {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-weight: 500;
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .alert-critical {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab:hover {
+            background: rgba(102, 126, 234, 0.8);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="header">
+            <h1>Smart MRL & AMU Analytics</h1>
+            <p>Real-time monitoring and management of Maximum Residue Limits and Antimicrobial Use</p>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label>Farm/Facility</label>
+                    <select id="facilitySelect">
+                        <option value="all">All Facilities</option>
+                        <option value="farm_a">Dairy Farm Alpha</option>
+                        <option value="farm_b">Poultry Farm Beta</option>
+                        <option value="farm_c">Cattle Ranch Gamma</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Time Period</label>
+                    <select id="timeSelect">
+                        <option value="week">Last 7 Days</option>
+                        <option value="month">Last 30 Days</option>
+                        <option value="quarter">Last 3 Months</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Species</label>
+                    <select id="speciesSelect">
+                        <option value="all">All Species</option>
+                        <option value="cattle">Cattle</option>
+                        <option value="poultry">Poultry</option>
+                        <option value="swine">Swine</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-tabs">
+            <button class="tab active" onclick="showTab('overview')">Overview</button>
+            <button class="tab" onclick="showTab('mrl')">MRL Monitoring</button>
+            <button class="tab" onclick="showTab('amu')">AMU Analytics</button>
+            <button class="tab" onclick="showTab('compliance')">Compliance</button>
+        </div>
+
+        <div id="overview-tab" class="tab-content">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Active Treatments</div>
+                    <div class="metric-value status-good" id="activeTreatments">24</div>
+                    <div class="alert alert-warning">2 nearing withdrawal period</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">MRL Compliance Rate</div>
+                    <div class="metric-value status-good" id="mrlCompliance">98.5%</div>
+                    <div style="color: #10b981;">Within acceptable range</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">AMU Index (DDDvet/kg)</div>
+                    <div class="metric-value status-warning" id="amuIndex">12.3</div>
+                    <div class="alert alert-warning">15% above target</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Pending Tests</div>
+                    <div class="metric-value status-critical" id="pendingTests">7</div>
+                    <div class="alert alert-critical">3 overdue</div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-title">MRL Trend Analysis</div>
+                    <canvas id="mrlTrendChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">AMU by Category</div>
+                    <canvas id="amuCategoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div id="mrl-tab" class="tab-content" style="display:none;">
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-title">MRL Levels by Substance</div>
+                    <canvas id="mrlSubstanceChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Withdrawal Period Tracking</div>
+                    <canvas id="withdrawalChart"></canvas>
+                </div>
+            </div>
+            <div class="data-table">
+                <div class="chart-title">Current MRL Status</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Animal ID</th>
+                            <th>Substance</th>
+                            <th>Current Level</th>
+                            <th>MRL Limit</th>
+                            <th>Days to Clear</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mrlTableBody">
+                        <tr>
+                            <td>C-001</td>
+                            <td>Penicillin</td>
+                            <td>0.003 mg/kg</td>
+                            <td>0.050 mg/kg</td>
+                            <td>2</td>
+                            <td style="color: #10b981;">✓ Safe</td>
+                        </tr>
+                        <tr>
+                            <td>C-047</td>
+                            <td>Oxytetracycline</td>
+                            <td>0.095 mg/kg</td>
+                            <td>0.100 mg/kg</td>
+                            <td>5</td>
+                            <td style="color: #f59e0b;">⚠ Monitor</td>
+                        </tr>
+                        <tr>
+                            <td>P-023</td>
+                            <td>Enrofloxacin</td>
+                            <td>0.105 mg/kg</td>
+                            <td>0.100 mg/kg</td>
+                            <td>12</td>
+                            <td style="color: #ef4444;">⚠ Exceeded</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="amu-tab" class="tab-content" style="display:none;">
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-title">AMU Consumption Trends</div>
+                    <canvas id="amuTrendChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Antibiotic Classes Usage</div>
+                    <canvas id="antibioticClassChart"></canvas>
+                </div>
+            </div>
+            <div class="data-table">
+                <div class="chart-title">AMU Summary by Farm</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Facility</th>
+                            <th>Total AMU (kg)</th>
+                            <th>DDDvet/PCU</th>
+                            <th>Target</th>
+                            <th>Variance</th>
+                            <th>Trend</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Dairy Farm Alpha</td>
+                            <td>24.5</td>
+                            <td>8.2</td>
+                            <td>10.0</td>
+                            <td style="color: #10b981;">-18%</td>
+                            <td>↓ Decreasing</td>
+                        </tr>
+                        <tr>
+                            <td>Poultry Farm Beta</td>
+                            <td>15.8</td>
+                            <td>15.3</td>
+                            <td>12.0</td>
+                            <td style="color: #f59e0b;">+28%</td>
+                            <td>↑ Increasing</td>
+                        </tr>
+                        <tr>
+                            <td>Cattle Ranch Gamma</td>
+                            <td>31.2</td>
+                            <td>9.7</td>
+                            <td>11.0</td>
+                            <td style="color: #10b981;">-12%</td>
+                            <td>→ Stable</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="compliance-tab" class="tab-content" style="display:none;">
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-title">Compliance Score Trends</div>
+                    <canvas id="complianceChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Violation Categories</div>
+                    <canvas id="violationChart"></canvas>
+                </div>
+            </div>
+            <div class="data-table">
+                <div class="chart-title">Recent Compliance Issues</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Facility</th>
+                            <th>Issue Type</th>
+                            <th>Severity</th>
+                            <th>Action Required</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2025-09-05</td>
+                            <td>Poultry Farm Beta</td>
+                            <td>MRL Exceedance</td>
+                            <td style="color: #ef4444;">High</td>
+                            <td>Extended withdrawal</td>
+                            <td style="color: #f59e0b;">In Progress</td>
+                        </tr>
+                        <tr>
+                            <td>2025-09-04</td>
+                            <td>Dairy Farm Alpha</td>
+                            <td>Missing documentation</td>
+                            <td style="color: #f59e0b;">Medium</td>
+                            <td>Submit records</td>
+                            <td style="color: #10b981;">Resolved</td>
+                        </tr>
+                        <tr>
+                            <td>2025-09-02</td>
+                            <td>Cattle Ranch Gamma</td>
+                            <td>Delayed testing</td>
+                            <td style="color: #f59e0b;">Medium</td>
+                            <td>Schedule tests</td>
+                            <td style="color: #10b981;">Resolved</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for charts
+        const chartData = {
+            mrlTrend: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{
+                    label: 'Average MRL Level',
+                    data: [0.032, 0.028, 0.035, 0.031],
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.4
+                }, {
+                    label: 'MRL Limit',
+                    data: [0.050, 0.050, 0.050, 0.050],
+                    borderColor: '#ef4444',
+                    borderDash: [5, 5],
+                    backgroundColor: 'transparent'
+                }]
+            },
+            amuCategory: {
+                labels: ['Beta-lactams', 'Tetracyclines', 'Fluoroquinolones', 'Macrolides', 'Others'],
+                datasets: [{
+                    data: [35, 25, 15, 20, 5],
+                    backgroundColor: ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe']
+                }]
+            }
+        };
+
+        // Initialize charts
+        function initCharts() {
+            // MRL Trend Chart
+            const mrlCtx = document.getElementById('mrlTrendChart').getContext('2d');
+            new Chart(mrlCtx, {
+                type: 'line',
+                data: chartData.mrlTrend,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'top' }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            // AMU Category Chart
+            const amuCtx = document.getElementById('amuCategoryChart').getContext('2d');
+            new Chart(amuCtx, {
+                type: 'doughnut',
+                data: chartData.amuCategory,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // Additional charts for other tabs
+            initMRLCharts();
+            initAMUCharts();
+            initComplianceCharts();
+        }
+
+        function initMRLCharts() {
+            const mrlSubstanceCtx = document.getElementById('mrlSubstanceChart');
+            if (mrlSubstanceCtx) {
+                new Chart(mrlSubstanceCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Penicillin', 'Oxytetracycline', 'Enrofloxacin', 'Tylosin'],
+                        datasets: [{
+                            label: 'Current Level',
+                            data: [0.003, 0.095, 0.105, 0.015],
+                            backgroundColor: '#667eea'
+                        }, {
+                            label: 'MRL Limit',
+                            data: [0.050, 0.100, 0.100, 0.080],
+                            backgroundColor: '#ef4444'
+                        }]
+                    },
+                    options: { responsive: true }
+                });
+            }
+
+            const withdrawalCtx = document.getElementById('withdrawalChart');
+            if (withdrawalCtx) {
+                new Chart(withdrawalCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['Day 0', 'Day 3', 'Day 6', 'Day 9', 'Day 12'],
+                        datasets: [{
+                            label: 'Animals in Withdrawal',
+                            data: [15, 12, 8, 5, 2],
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)'
+                        }]
+                    },
+                    options: { responsive: true }
+                });
+            }
+        }
+
+        function initAMUCharts() {
+            const amuTrendCtx = document.getElementById('amuTrendChart');
+            if (amuTrendCtx) {
+                new Chart(amuTrendCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        datasets: [{
+                            label: 'DDDvet/PCU',
+                            data: [14.2, 13.8, 12.5, 11.9, 12.8, 12.3],
+                            borderColor: '#764ba2',
+                            backgroundColor: 'rgba(118, 75, 162, 0.1)'
+                        }]
+                    },
+                    options: { responsive: true }
+                });
+            }
+
+            const antibioticCtx = document.getElementById('antibioticClassChart');
+            if (antibioticCtx) {
+                new Chart(antibioticCtx.getContext('2d'), {
+                    type: 'polarArea',
+                    data: {
+                        labels: ['Penicillins', 'Tetracyclines', 'Quinolones', 'Macrolides', 'Sulfonamides'],
+                        datasets: [{
+                            data: [30, 25, 15, 20, 10],
+                            backgroundColor: ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe']
+                        }]
+                    },
+                    options: { responsive: true }
+                });
+            }
+        }
+
+        function initComplianceCharts() {
+            const complianceCtx = document.getElementById('complianceChart');
+            if (complianceCtx) {
+                new Chart(complianceCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        datasets: [{
+                            label: 'Compliance Score (%)',
+                            data: [95, 97, 94, 98, 96, 98.5],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)'
+                        }]
+                    },
+                    options: { responsive: true }
+                });
+            }
+
+            const violationCtx = document.getElementById('violationChart');
+            if (violationCtx) {
+                new Chart(violationCtx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['MRL Violations', 'Documentation', 'Testing Delays', 'Withdrawal Errors'],
+                        datasets: [{
+                            data: [3, 5, 2, 4],
+                            backgroundColor: ['#ef4444', '#f59e0b', '#f59e0b', '#ef4444']
+                        }]
+                    },
+                    options: { responsive: true }
+                });
+            }
+        }
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.style.display = 'none');
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabName + '-tab').style.display = 'block';
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Update data based on filters
+        function updateDashboard() {
+            // This would typically fetch new data from API
+            console.log('Updating dashboard with current filters...');
+            // Update metrics and refresh charts
+        }
+
+        // Event listeners for filters
+        document.getElementById('facilitySelect').addEventListener('change', updateDashboard);
+        document.getElementById('timeSelect').addEventListener('change', updateDashboard);
+        document.getElementById('speciesSelect').addEventListener('change', updateDashboard);
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+        });
+
+        // Auto-refresh every 5 minutes
+        setInterval(updateDashboard, 300000);
+    </script>
+</body>
+</html>

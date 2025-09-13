@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Livestock Data Collection</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.7rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .submit-btn {
+      background: #28a745;
+      color: white;
+      margin-bottom: 0.8rem;
+    }
+    .translate-btn {
+      background: #007bff;
+      color: white;
+    }
+    @media (max-width: 500px) {
+      .container {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 id="form-title">Livestock Data</h2>
+    <form id="livestock-form" action="submit.php" method="POST">
+      <label id="label-id" for="unique_id">Unique ID</label>
+      <input type="text" id="unique_id" name="unique_id" required />
+
+      <label id="label-type" for="type">Type of Livestock</label>
+      <select id="type" name="type" required>
+        <option value="cow">Cow</option>
+        <option value="buffalo">Buffalo</option>
+        <option value="chicken">Chicken</option>
+        <option value="goat">Goat</option>
+      </select>
+
+      <label id="label-weight" for="weight">Weight (kg)</label>
+      <input type="number" id="weight" name="weight" required />
+
+      <label id="label-age" for="age">Age (years)</label>
+      <input type="number" id="age" name="age" required />
+
+      <button type="submit" class="submit-btn" id="submit-btn">Submit</button>
+    </form>
+    <button class="translate-btn" onclick="translateToHindi()" id="translate-btn">Translate to Hindi</button>
+  </div>
+
+  <script>
+    let translated = false;
+
+    function translateToHindi() {
+      if (!translated) {
+        document.getElementById('form-title').innerText = 'पशुधन विवरण';
+        document.getElementById('label-id').innerText = 'विशिष्ट आईडी';
+        document.getElementById('label-type').innerText = 'पशुधन का प्रकार';
+        document.getElementById('label-weight').innerText = 'वजन (किग्रा)';
+        document.getElementById('label-age').innerText = 'आयु (वर्ष)';
+        document.getElementById('submit-btn').innerText = 'जमा करें';
+        document.getElementById('translate-btn').innerText = 'Translate to English';
+        translated = true;
+      } else {
+        document.getElementById('form-title').innerText = 'Livestock Data';
+        document.getElementById('label-id').innerText = 'Unique ID';
+        document.getElementById('label-type').innerText = 'Type of Livestock';
+        document.getElementById('label-weight').innerText = 'Weight (kg)';
+        document.getElementById('label-age').innerText = 'Age (years)';
+        document.getElementById('submit-btn').innerText = 'Submit';
+        document.getElementById('translate-btn').innerText = 'Translate to Hindi';
+        translated = false;
+      }
+    }
+  </script>
+</body>
+</html>

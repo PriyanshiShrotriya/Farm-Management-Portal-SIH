@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>FarmSafe Portal - MRL & AMU Management</title>
+    
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <div class="logo-icon">🌱</div>
+                <h1 data-en="FarmSafe Portal" data-hi="फार्मसेफ पोर्टल">FarmSafe Portal</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="features.html" data-en="Features" data-hi="सुविधाएं">Features</a></li>
+                <li><a href="About.html" data-en="About" data-hi="के बारे में">About</a></li>
+                <li><a href="Support.html" data-en="Support" data-hi="सहायता">Support</a></li>
+                <li><a href="https://www.agriwelfare.gov.in/" target="_main" data-en="Resources" data-hi="संसाधन">Resources</a></li>
+            </ul>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button class="language-btn" onclick="toggleLanguage()" id="langBtn">
+                    🌐 हिंदी 
+                </button>
+                <a href="Login.html" class="login-btn" onclick="handleLogin()" data-en="Login / Register" data-hi="लॉगिन / रजिस्टर">Login / Register</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h2 data-en="Smart MRL & AMU Management" data-hi="स्मार्ट MRL और AMU प्रबंधन">Smart MRL & AMU Management</h2>
+                    <p data-en="Streamline your Maximum Residue Levels and Antimicrobial Use tracking with our comprehensive farmer-focused portal. Ensure compliance, protect food safety, and optimize your farm operations." data-hi="हमारे व्यापक किसान-केंद्रित पोर्टल के साथ अपने अधिकतम अवशेष स्तर और रोगाणुरोधी उपयोग ट्रैकिंग को सुव्यवस्थित करें। अनुपालन सुनिश्चित करें, खाद्य सुरक्षा की रक्षा करें, और अपने खेत के संचालन को अनुकूलित करें।">Streamline your Maximum Residue Levels and Antimicrobial Use tracking with our comprehensive farmer-focused portal. Ensure compliance, protect food safety, and optimize your farm operations.</p>
+                    
+                    <div class="alert">
+                        ⚠ <span data-en="New EU regulations on antimicrobial use in livestock take effect this year - Stay compliant!" data-hi="पशुधन में रोगाणुरोधी उपयोग पर नए EU नियम इस वर्ष प्रभावी हैं - अनुपालन में रहें!">New EU regulations on antimicrobial use in livestock take effect this year - Stay compliant!</span>
+                    </div>
+
+                    <div class="cta-buttons">
+                        <a href="#" class="btn-primary" onclick="startDemo()" data-en="Start Free Trial" data-hi="मुफ्त परीक्षण शुरू करें">Start Free Trial</a>
+                        <a href="#" class="btn-secondary" onclick="watchDemo()" data-en="Watch Demo" data-hi="डेमो देखें">Watch Demo</a>
+                    </div>
+                </div>
+                
+                <div class="hero-image">
+                    <div class="image-slider">
+                        <div class="slide active">
+                            <img src="heroimage 2 farm.jpg" alt="Indian farmer working in field" />
+                        </div>
+                        <div class="slide">
+                            <img src="heroimage2.jpg" alt="Farm management technology" />
+                        </div>
+                        <div class="slide">
+                            <img src="heroimage3.jpg" alt="Livestock management" />
+                        </div>
+                    </div>
+                    
+                    <button class="slider-arrow prev" onclick="previousSlide()">‹</button>
+                    <button class="slider-arrow next" onclick="nextSlide()">›</button>
+                    
+                    <div class="slider-nav">
+                        <div class="slider-dot active" onclick="currentSlide(1)"></div>
+                        <div class="slider-dot" onclick="currentSlide(2)"></div>
+                        <div class="slider-dot" onclick="currentSlide(3)"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <div class="container">
+                <h3 data-en="Powerful Tools for Modern Farmers" data-hi="आधुनिक किसानों के लिए शक्तिशाली उपकरण">Powerful Tools for Modern Farmers</h3>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🧪</div>
+                        <h4 data-en="MRL Monitoring" data-hi="MRL निगरानी">MRL Monitoring</h4>
+                        <p data-en="Real-time tracking of Maximum Residue Levels across all your crops and livestock. Get alerts before limits are exceeded and maintain detailed compliance records." data-hi="आपकी सभी फसलों और पशुधन में अधिकतम अवशेष स्तर की वास्तविक समय पर निगरानी। सीमा पार होने से पहले अलर्ट प्राप्त करें और विस्तृत अनुपालन रिकॉर्ड बनाए रखें।">Real-time tracking of Maximum Residue Levels across all your crops and livestock. Get alerts before limits are exceeded and maintain detailed compliance records.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💊</div>
+                        <h4 data-en="AMU Management" data-hi="AMU प्रबंधन">AMU Management</h4>
+                        <p data-en="Comprehensive Antimicrobial Use tracking with automated withdrawal period calculations, dosage monitoring, and veterinary prescription management." data-hi="स्वचालित निकासी अवधि गणना, खुराक निगरानी, और पशु चिकित्सा प्रिस्क्रिप्शन प्रबंधन के साथ व्यापक रोगाणुरोधी उपयोग ट्रैकिंग।">Comprehensive Antimicrobial Use tracking with automated withdrawal period calculations, dosage monitoring, and veterinary prescription management.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h4 data-en="Analytics Dashboard" data-hi="विश्लेषण डैशबोर्ड">Analytics Dashboard</h4>
+                        <p data-en="Visual insights into your farm's chemical usage patterns, compliance status, and optimization opportunities with customizable reporting tools." data-hi="अनुकूलन योग्य रिपोर्टिंग टूल्स के साथ आपके खेत के रासायनिक उपयोग पैटर्न, अनुपालन स्थिति, और अनुकूलन अवसरों में दृश्य अंतर्दृष्टि।">Visual insights into your farm's chemical usage patterns, compliance status, and optimization opportunities with customizable reporting tools.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔔</div>
+                        <h4 data-en="Smart Alerts" data-hi="स्मार्ट अलर्ट">Smart Alerts</h4>
+                        <p data-en="Proactive notifications for withdrawal periods, upcoming inspections, expiring chemicals, and regulatory changes that affect your operations." data-hi="निकासी अवधि, आगामी निरीक्षण, समाप्त होने वाले रसायन, और आपके संचालन को प्रभावित करने वाले नियामक परिवर्तनों के लिए सक्रिय सूचनाएं।">Proactive notifications for withdrawal periods, upcoming inspections, expiring chemicals, and regulatory changes that affect your operations.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📱</div>
+                        <h4 data-en="Mobile Access" data-hi="मोबाइल पहुंच">Mobile Access</h4>
+                        <p data-en="Full-featured mobile app for field data entry, barcode scanning, and real-time access to all your farm management data wherever you are." data-hi="फील्ड डेटा एंट्री, बारकोड स्कैनिंग, और आप जहां भी हों अपने सभी खेत प्रबंधन डेटा तक वास्तविक समय पहुंच के लिए पूर्ण-सुविधा वाला मोबाइल ऐप।">Full-featured mobile app for field data entry, barcode scanning, and real-time access to all your farm management data wherever you are.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🐄</div>
+                        <h4 data-en="Breed Recognition" data-hi="नस्ल पहचान">Breed Recognition</h4>
+                        <p data-en="Breed recognition can be automated through photos or videos, making it faster, more reliable, and useful for large-scale farm management systems." data-hi="नस्ल पहचान को फोटो या वीडियो के माध्यम से स्वचालित किया जा सकता है, जो इसे तेज़, अधिक विश्वसनीय, और बड़े पैमाने की खेत प्रबंधन प्रणालियों के लिए उपयोगी बनाता है।">Breed recognition can be automated through photos or videos, making it faster, more reliable, and useful for large-scale farm management systems.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="dashboard" class="dashboard-preview">
+            <div class="container">
+                <h3 data-en="Your Farm Command Center" data-hi="आपका खेत कमांड सेंटर">Your Farm Command Center</h3>
+                <div class="dashboard-mockup">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" data-en="Active Animals: 247" data-hi="सक्रिय पशु: 247">Active Animals: 247</div>
+                            <div class="stat-label" data-en="Under Monitoring" data-hi="निगरानी में">Under Monitoring</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" data-en="MRL Status: 98%" data-hi="MRL स्थिति: 98%">MRL Status: 98%</div>
+                            <div class="stat-label" data-en="Compliant" data-hi="अनुपालित">Compliant</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" data-en="Alerts: 3" data-hi="अलर्ट: 3">Alerts: 3</div>
+                            <div class="stat-label" data-en="Pending Actions" data-hi="लंबित कार्य">Pending Actions</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" data-en="Withdrawals: 12" data-hi="निकासी: 12">Withdrawals: 12</div>
+                            <div class="stat-label" data-en="This Month" data-hi="इस महीने">This Month</div>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-actions">
+                        <button class="action-btn" onclick="recordTreatment()" data-en="Record Treatment" data-hi="उपचार रिकॉर्ड करें">Record Treatment</button>
+                        <button class="action-btn" onclick="checkWithdrawal()" data-en="Check Withdrawal" data-hi="निकासी जांचें">Check Withdrawal</button>
+                        <button class="action-btn" onclick="scanProduct()" data-en="Scan Product" data-hi="उत्पाद स्कैन करें">Scan Product</button>
+                        <button class="action-btn" onclick="generateReport()" data-en="Generate Report" data-hi="रिपोर्ट जेनरेट करें">Generate Report</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    
+
+    <div class="tts-container">
+        <!-- Main TTS Button -->
+        <button class="tts-button" id="ttsButton" onclick="toggleTTS()" title="Text to Speech">
+            <svg class="tts-icon" id="ttsIcon" viewBox="0 0 24 24">
+                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+            </svg>
+        </button>
+        <!-- TTS Controls Panel -->
+        <div class="tts-controls" id="ttsControls">
+            <div class="tts-control-item">
+                <span data-en="Speed:" data-hi="गति:">Speed:</span>
+                <input type="range" class="tts-slider" id="speedSlider" min="0.5" max="2" step="0.1" value="1">
+            </div>
+            <div class="tts-control-item">
+                <span data-en="Pitch:" data-hi="स्वर:">Pitch:</span>
+                <input type="range" class="tts-slider" id="pitchSlider" min="0" max="2" step="0.1" value="1">
+            </div>
+            <div class="tts-control-item">
+                <span data-en="Volume:" data-hi="आवाज़:">Volume:</span>
+                <input type="range" class="tts-slider" id="volumeSlider" min="0" max="1" step="0.1" value="0.8">
+            </div>
+            <div class="tts-control-item">
+                <span data-en="Language:" data-hi="भाषा:">Language:</span>
+                <select class="tts-language-select" id="ttsLanguage">
+                    <option value="en-US">English</option>
+                    <option value="hi-IN">हिंदी</option>
+                </select>
+            </div>
+        </div>
+        <!-- Status Indicator -->
+        <div class="tts-status" id="ttsStatus"></div>
+    </div>
+    <footer class="footer">
+        <div class="container">
+            <p data-en="© 2025 FarmSafe Portal. Empowering sustainable agriculture through smart compliance management." data-hi="© 2025 फार्मसेफ पोर्टल। स्मार्ट अनुपालन प्रबंधन के माध्यम से टिकाऊ कृषि को सशक्त बनाना।">&copy; 2025 FarmSafe Portal. Empowering sustainable agriculture through smart compliance management.</p>
+            <p data-en="🌱 Protecting food safety • Ensuring compliance • Supporting farmers" data-hi="🌱 खाद्य सुरक्षा की रक्षा • अनुपालन सुनिश्चित करना • किसानों का समर्थन">🌱 Protecting food safety • Ensuring compliance • Supporting farmers</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
